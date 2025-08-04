@@ -11,12 +11,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.UUID;
 
 @Table("edus_products")
 public class Product {
     @Id
     @Column("product_id")
-    private String productId;
+    private UUID productId;
     @Column("code")
     private String code;
     @Column("ean")
@@ -147,11 +148,11 @@ public class Product {
     }
 
     // Getters and Setters for all fields
-    public String getProductId() {
+    public UUID getProductId() {
         return productId;
     }
 
-    public void setProductId(String productId) {
+    public void setProductId(UUID productId) {
         this.productId = productId;
     }
 

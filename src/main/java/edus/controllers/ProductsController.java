@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.lang.Iterable;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
@@ -30,5 +31,10 @@ public class ProductsController {
     ) {
         System.out.println("Received categoryLevel3Id: " + categoryLevel3Id);
         return productService.getProductByCategoryLevel3Id(categoryLevel3Id);
+    }
+
+    @GetMapping("/products/findById")
+    public Product findById(@RequestParam (name = "id", required = true) UUID id) {
+       return productService.findById(id);
     }
 }
