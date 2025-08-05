@@ -4,7 +4,7 @@ pipeline {
 
   environment {
 
-    DOCKER_IMAGE = "near1715/edus-cart:${BUILD_NUMBER}"
+    DOCKER_IMAGE = "near1715/product-service:${BUILD_NUMBER}"
 
     KUBECONFIG = "/var/lib/jenkins/.kube/config"
 
