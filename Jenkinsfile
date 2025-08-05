@@ -78,7 +78,7 @@ pipeline {
 
           kubectl apply -f k8s/
 
-          kubectl scale deployment cart-service --replicas=1 || true
+          kubectl scale deployment product-service --replicas=1 || true
 
         """
 
