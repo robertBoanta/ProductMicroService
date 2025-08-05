@@ -1,0 +1,380 @@
+openapi: 3.1.0
+info:
+  title: Product Microservice API
+  description: |
+    A microservice for managing product information including categories, attributes, and pictures.
+    This API provides endpoints to retrieve products by category and by specific product ID.
+  version: 1.0.0
+  contact:
+    name: Product Team
+    email: products@company.com
+servers:
+  - url: 'http://localhost:8080'
+    description: Development server
+  - url: 'https://api.company.com'
+    description: Production server
+
+paths:
+  /api/products:
+    get:
+      summary: Get products by category
+      description: Retrieves a list of products filtered by category level 3 ID
+      operationId: getProducts
+      tags:
+        - Products
+      parameters:
+        - name: categoryLevel3Id
+          in: query
+          required: true
+          description: The category level 3 ID to filter products
+          schema:
+            type: integer
+            format: int32
+            example: 123
+      responses:
+        '200':
+          description: Successful response with list of products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        '400':
+          description: Bad request - invalid category ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/products/findById:
+    get:
+      summary: Find product by ID
+      description: Retrieves a specific product by its unique identifier
+      operationId: findProductById
+      tags:
+        - Products
+      parameters:
+        - name: id
+          in: query
+          required: true
+          description: The unique product ID
+          schema:
+            type: string
+            format: uuid
+            example: "123e4567-e89b-12d3-a456-426614174000"
+      responses:
+        '200':
+          description: Successful response with product details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          description: Bad request - invalid product ID format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /actuator/health:
+    get:
+      summary: Health check endpoint
+      description: Returns the health status of the application
+      operationId: getHealth
+      tags:
+        - Monitoring
+      responses:
+        '200':
+          description: Application is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "UP"
+
+components:
+  schemas:
+    Product:
+      type: object
+      description: Product entity with all associated information
+      properties:
+        productId:
+          type: string
+          format: uuid
+          description: Unique product identifier
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        code:
+          type: string
+          description: Product code
+          example: "LAPTOP-001"
+        ean:
+          type: string
+          description: European Article Number
+          example: "1234567890123"
+        title:
+          type: string
+          description: Product title
+          example: "Gaming Laptop RTX 5080"
+        description:
+          type: string
+          description: Short product description
+          example: "High-performance gaming laptop"
+        fullDescription:
+          type: string
+          description: Detailed product description
+          example: "Professional gaming laptop with RTX 5080 graphics card and Intel Core Ultra 9 processor"
+        minimumQuantity:
+          type: integer
+          format: int32
+          description: Minimum order quantity
+          example: 1
+        manufacturerId:
+          type: string
+          description: Manufacturer identifier
+          example: "MFG001"
+        manufacturerName:
+          type: string
+          description: Manufacturer name
+          example: "TechCorp"
+        categoryLevel1Id:
+          type: integer
+          format: int32
+          description: Level 1 category ID
+          example: 1
+        categoryLevel1Name:
+          type: string
+          description: Level 1 category name
+          example: "Electronics"
+        categoryLevel2Id:
+          type: integer
+          format: int32
+          description: Level 2 category ID
+          example: 10
+        categoryLevel2Name:
+          type: string
+          description: Level 2 category name
+          example: "Computers"
+        categoryLevel3Id:
+          type: integer
+          format: int32
+          description: Level 3 category ID
+          example: 123
+        categoryLevel3Name:
+          type: string
+          description: Level 3 category name
+          example: "Laptops"
+        stock:
+          type: integer
+          format: int32
+          description: Available stock quantity
+          example: 50
+        reservedStock:
+          type: integer
+          format: int32
+          description: Reserved stock quantity
+          example: 5
+        supplierStock:
+          type: integer
+          format: int32
+          description: Supplier stock quantity
+          example: 100
+        supplierStockDeliveryDate:
+          type: string
+          description: Expected delivery date from supplier
+          example: "2024-12-31"
+        price:
+          type: number
+          format: decimal
+          description: Product price
+          example: 2999.99
+        promoPrice:
+          type: number
+          format: decimal
+          description: Promotional price
+          example: 2699.99
+        greenStamp:
+          type: number
+          format: decimal
+          description: Environmental tax
+          example: 5.00
+        vatPercent:
+          type: number
+          format: decimal
+          description: VAT percentage
+          example: 19.00
+        isSpecialPrice:
+          type: boolean
+          description: Whether the product has a special price
+          example: true
+        length:
+          type: number
+          format: decimal
+          description: Product length
+          example: 35.0
+        width:
+          type: number
+          format: decimal
+          description: Product width
+          example: 25.0
+        height:
+          type: number
+          format: decimal
+          description: Product height
+          example: 2.5
+        lengthUnitOfMeasure:
+          type: string
+          description: Unit of measure for dimensions
+          example: "cm"
+        weight:
+          type: number
+          format: decimal
+          description: Product weight
+          example: 3.15
+        weightUnitOfMeasure:
+          type: string
+          description: Unit of measure for weight
+          example: "kg"
+        isNew:
+          type: boolean
+          description: Whether the product is new
+          example: true
+        isEol:
+          type: boolean
+          description: Whether the product is end-of-life
+          example: false
+        isOnDemand:
+          type: boolean
+          description: Whether the product is available on demand
+          example: false
+        onDemandDeliveryTime:
+          type: integer
+          format: int32
+          description: Delivery time in days for on-demand products
+          example: 7
+        hasResealed:
+          type: boolean
+          description: Whether the product has resealed options
+          example: false
+        originalProductId:
+          type: string
+          description: Original product ID if this is a variant
+          example: "ORIG-001"
+        warranty:
+          type: integer
+          format: int32
+          description: Warranty period in months
+          example: 24
+        isActive:
+          type: boolean
+          description: Whether the product is active
+          example: true
+        version:
+          type: string
+          description: Product version
+          example: "1.0"
+        hasPriceRequest:
+          type: boolean
+          description: Whether the product requires price request
+          example: false
+        pictures:
+          type: array
+          description: Product images
+          items:
+            $ref: '#/components/schemas/Picture'
+        attributes:
+          type: array
+          description: Product attributes
+          items:
+            $ref: '#/components/schemas/Attribute'
+        # Raw JSON fields (for debugging purposes)
+        picturesJson:
+          type: string
+          description: Raw JSON string of pictures
+          example: '[{"picture_id": "1986945b610833577fc75ef1927b931d", "picture_url": "https://cdn.b2b.nod.ro/images/overlay_1986945b610833577fc75ef1927b931d.jpeg"}]'
+        attributesJson:
+          type: string
+          description: Raw JSON string of attributes
+          example: '[{"attribute_name": "RAM", "attribute_value": "32GB", "attribute_name_id": 1165, "attribute_value_id": 19791}]'
+
+    Picture:
+      type: object
+      description: Product image information
+      properties:
+        pictureId:
+          type: string
+          description: Unique picture identifier
+          example: "1986945b610833577fc75ef1927b931d"
+        pictureUrl:
+          type: string
+          format: uri
+          description: URL to the product image
+          example: "https://cdn.b2b.nod.ro/images/overlay_1986945b610833577fc75ef1927b931d.jpeg"
+
+    Attribute:
+      type: object
+      description: Product attribute information
+      properties:
+        attributeName:
+          type: string
+          description: Name of the attribute
+          example: "RAM"
+        attributeValue:
+          type: string
+          description: Value of the attribute
+          example: "32GB"
+        attributeNameId:
+          type: integer
+          format: int32
+          description: Unique identifier for the attribute name
+          example: 1165
+        attributeValueId:
+          type: integer
+          format: int32
+          description: Unique identifier for the attribute value
+          example: 19791
+
+    Error:
+      type: object
+      description: Error response
+      properties:
+        message:
+          type: string
+          description: Error message
+          example: "Product not found"
+        code:
+          type: string
+          description: Error code
+          example: "PRODUCT_NOT_FOUND"
+        timestamp:
+          type: string
+          format: date-time
+          description: Error timestamp
+          example: "2024-01-01T12:00:00Z"
+
+tags:
+  - name: Products
+    description: Product management operations
+  - name: Monitoring
+    description: Application monitoring endpoints
