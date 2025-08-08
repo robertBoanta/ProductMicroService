@@ -16,4 +16,7 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
 
     @Query("SELECT * FROM edus_products WHERE product_id = :id")
     Product findById(UUID id);
+
+    @Query("DELETE FROM edus_products WHERE product_id = :id")
+    void deleteById(UUID id);
 }

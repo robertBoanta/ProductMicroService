@@ -9,16 +9,13 @@ info:
     name: Product Team
     email: products@company.com
 servers:
-  - url: 'http://localhost:8080'
+  - url: 'http://localhost:8091'
     description: Development server
-  - url: 'https://api.company.com'
-    description: Production server
-
 paths:
-  /api/products:
+  /api/products/:
     get:
       summary: Get products by category
-      description: Retrieves a list of products filtered by category level 3 ID
+      description: Retrieves a list of products filtered by category level 3 ID which is the ID of the category in which the product is located.
       operationId: getProducts
       tags:
         - Products
@@ -113,6 +110,56 @@ paths:
                   status:
                     type: string
                     example: "UP"
+
+  /api/products/deleteById:
+    delete:
+      summary: Delete product by ID
+      description: Deletes a specific product by its unique identifier
+      operationId: deleteProductById
+      tags:
+        - Products
+      parameters:
+        - name: id
+          in: query
+          required: true
+          description: The unique product ID to delete
+          schema:
+            type: string
+            format: uuid
+            example: "123e4567-e89b-12d3-a456-426614174000"
+      responses:
+        '200':
+          description: Product successfully deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Product deleted successfully"
+                  productId:
+                    type: string
+                    format: uuid
+                    example: "123e4567-e89b-12d3-a456-426614174000"
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          description: Bad request - invalid product ID format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
 components:
   schemas:
