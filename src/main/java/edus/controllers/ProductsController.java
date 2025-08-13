@@ -4,19 +4,16 @@ package edus.controllers;
 import edus.models.Product;
 import edus.repositories.ProductRepository;
 import edus.services.ProductService;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.List;
 import java.lang.Iterable;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.StreamSupport;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
 @RequestMapping("/api/products")
@@ -47,5 +44,11 @@ public class ProductsController {
         productService.deleteById(id);
     }
 
-
+    @GetMapping("/filter")
+    public Iterable<Product> filterProductsByMultipleAttributes(
+            @RequestParam(name = "categoryLevel3Id", required = true) Integer categoryLevel3Id,
+            @RequestBody Map<String, String> attributeFilters
+    ) {
+        return productService.filterProductsByAttributes(categoryLevel3Id, attributeFilters);
+    }
 }
